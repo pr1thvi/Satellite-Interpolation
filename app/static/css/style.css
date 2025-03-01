@@ -1,0 +1,426 @@
+#map {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Improve tile rendering */
+.ol-layer {
+    transition: opacity 0.2s;
+}
+
+.ol-layer tile {
+    image-rendering: high-quality;
+    image-rendering: crisp-edges;
+}
+
+/* Controls container - main wrapper for bottom controls */
+#controls {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    width: 90%;
+    max-width: 1000px;
+    transition: opacity 0.3s ease;
+}
+
+/* Top right controls group */
+.top-right-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    width: 280px;
+    transition: opacity 0.3s ease;
+}
+
+/* Layer selector styling */
+.layer-select {
+    background: rgba(40, 40, 40, 0.95);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.layer-select:hover {
+    background: rgba(50, 50, 50, 0.95);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.layer-select option {
+    background: #333;
+    color: white;
+    padding: 8px;
+}
+
+/* Loading indicator */
+#loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(40, 40, 40, 0.95);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* OpenLayers controls */
+.ol-zoom {
+    top: 20px !important;
+    left: 20px !important;
+    background: rgba(40, 40, 40, 0.95) !important;
+    padding: 2px !important;
+    border-radius: 4px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.ol-zoom-in,
+.ol-zoom-out {
+    color: white !important;
+    background: rgba(60, 60, 60, 0.9) !important;
+    border: none !important;
+    margin: 1px !important;
+    transition: background 0.2s !important;
+}
+
+.ol-zoom-in:hover,
+.ol-zoom-out:hover {
+    background: rgba(80, 80, 80, 1) !important;
+}
+
+#layer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.layer-toggle {
+    display: flex;
+    align-items: center;
+    background: #333;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.layer-toggle input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Video container */
+#video-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    z-index: 1500;
+    background: rgba(40, 40, 40, 0.95);
+    padding: 20px;
+    border-radius: 8px;
+    display: none;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#video-container.visible {
+    display: block;
+}
+
+video {
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Layer opacity slider */
+.layer-opacity {
+    width: 100px;
+    margin: 0 10px;
+}
+
+/* Reference controls */
+.reference-controls {
+    background: rgba(40, 40, 40, 0.95);
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.reference-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 3px;
+}
+
+.reference-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.reference-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Date Slider Container */
+.date-slider-container {
+    background: rgba(40, 40, 40, 0.95);
+    padding: 15px 25px;
+    border-radius: 8px;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.date-display {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 5px 0;
+}
+
+.date-slider {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-appearance: none;
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+.date-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #0b3d91;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.date-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.date-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #0b3d91;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.date-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+.play-button, .step-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.play-button {
+    background: rgba(11, 61, 145, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.play-button:hover {
+    background: rgba(11, 61, 145, 1);
+    transform: scale(1.05);
+}
+
+.step-button {
+    background: rgba(60, 60, 60, 0.9);
+    font-size: 20px;
+}
+
+.step-button:hover {
+    background: rgba(80, 80, 80, 1);
+    transform: scale(1.05);
+}
+
+/* Hide/Show Toggle Button */
+.view-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(40, 40, 40, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 20px;
+}
+
+.view-toggle:hover {
+    background: rgba(50, 50, 50, 0.95);
+    transform: scale(1.05);
+}
+
+/* Hide state for controls */
+.clean-view .top-right-controls,
+.clean-view .reference-controls,
+.clean-view .date-slider-container,
+.clean-view .ol-zoom,
+.clean-view #layer-controls {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Show controls on hover when in clean view */
+.clean-view .top-right-controls:hover,
+.clean-view .reference-controls:hover,
+.clean-view .date-slider-container:hover,
+.clean-view .ol-zoom:hover,
+.clean-view #layer-controls:hover {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Hide button for individual controls */
+.hide-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.hide-button:hover {
+    background: rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+}
+
+/* Hidden state for individual controls */
+.hidden {
+    display: none !important;
+}
+
+/* Show button to restore hidden controls */
+.restore-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(40, 40, 40, 0.95);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1002;
+    display: none;
+}
+
+.restore-controls:hover {
+    background: rgba(50, 50, 50, 0.95);
+}
+
+.restore-controls.visible {
+    display: block;
+} 
