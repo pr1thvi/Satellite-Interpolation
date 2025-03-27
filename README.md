@@ -59,10 +59,8 @@ An interactive web application for visualizing and creating smooth animations fr
 
 ## Screenshots
 
-[Add screenshots of your application here]
+  <img src="1741068765018.png" alt="Welcome Screen"/>
 
 ## Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
-
-Project Link: [https://github.com/yourusername/Satellite-Interpolation](https://github.com/yourusername/Satellite-Interpolation)
+Prithvi Marwadi - [@prithveei](https://x.com/prithveei) - prithvimarwadiwork@gmail.com
